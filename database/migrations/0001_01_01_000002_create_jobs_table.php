@@ -12,13 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('jobs', function (Blueprint $table) {
-            $table->id();
-            $table->string('queue')->index();
-            $table->longText('payload');
-            $table->unsignedSmallInteger('attempts');
-            $table->unsignedInteger('reserved_at')->nullable();
-            $table->unsignedInteger('available_at');
-            $table->unsignedInteger('created_at');
+            $table->id('id_jobs');
+            $table->string('posisi');
+            $table->string('perusahaan');
+            $table->enum('tipe_pekerjaan', ['Penuh Waktu', 'Paruh Waktu', 'Magang', 'Kontrak']);
+            $table->string('lokasi');
+            $table->string('gaji')->nullable();
+            $table->text('deskripsi');
+            $table->text('persyaratan');
+            $table->date('batas_waktu');
+            $table->enum('status', ['Aktif', 'Tutup'])->default('Aktif');
+            $table->timestamps();
         });
 
         Schema::create('job_batches', function (Blueprint $table) {
