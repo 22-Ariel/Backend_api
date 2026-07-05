@@ -2,29 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Job;
+use App\Models\Lowongan;
 use Illuminate\Http\Request;
 
 class JobController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Job::query();
+        $query = Lowongan::query();
         if ($request->search) {
-            $query->where('posisi', 'like', "%{$request->search}%")
-                  ->orWhere('perusahaan', 'like', "%{$request->search}%");
-        }
-        if ($request->type) {
-            $query->where('tipe_pekerjaan', $request->type);
+            $query->where('title', 'like', "%{$request->search}%")
+                  ->orWhere('company', 'like', "%{$request->search}%");
         }
         return response()->json($query->orderBy('created_at', 'desc')->get());
     }
 
     public function show($id)
     {
-        $job = Job::find($id);
-        if (!$job) return response()->json(['message' => 'Not found'], 404);
-        return response()->json($job);
+        $lowongan = Lowongan::find($id);
+        if (!$lowongan) return response()->json(['message' => 'Not found'], 404);
+        return response()->json($lowongan);
     }
 
     // === ADMIN ENDPOINTS ===
@@ -32,34 +29,34 @@ class JobController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'posisi' => 'required',
-            'perusahaan' => 'required',
-            'tipe_pekerjaan' => 'required|in:Penuh Waktu,Paruh Waktu,Magang,Kontrak',
-            'lokasi' => 'required',
-            'deskripsi' => 'required',
-            'persyaratan' => 'required',
-            'batas_waktu' => 'required|date'
+            'title' => 'required',
+            'company' => 'required',
+            'location' => 'required',
+            'description' => 'required'
         ]);
 
-        $job = Job::create($request->all());
-        return response()->json(['message' => 'Berhasil dibuat', 'data' => $job], 201);
+        $data = $request->all();
+        $data['id_user'] = $request->user()->id_user; // Assign current admin
+
+        $lowongan = Lowongan::create($data);
+        return response()->json(['message' => 'Berhasil dibuat', 'data' => $lowongan], 201);
     }
 
     public function update(Request $request, $id)
     {
-        $job = Job::find($id);
-        if (!$job) return response()->json(['message' => 'Not found'], 404);
+        $lowongan = Lowongan::find($id);
+        if (!$lowongan) return response()->json(['message' => 'Not found'], 404);
         
-        $job->update($request->all());
-        return response()->json(['message' => 'Berhasil diupdate', 'data' => $job]);
+        $lowongan->update($request->all());
+        return response()->json(['message' => 'Berhasil diupdate', 'data' => $lowongan]);
     }
 
     public function destroy($id)
     {
-        $job = Job::find($id);
-        if (!$job) return response()->json(['message' => 'Not found'], 404);
+        $lowongan = Lowongan::find($id);
+        if (!$lowongan) return response()->json(['message' => 'Not found'], 404);
         
-        $job->delete();
+        $lowongan->delete();
         return response()->json(['message' => 'Berhasil dihapus']);
     }
 }
