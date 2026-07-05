@@ -11,14 +11,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['email', 'password', 'role'])]
+#[Fillable(['username', 'email', 'password', 'role'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $primaryKey = 'id_users';
+    protected $primaryKey = 'id_user';
 
     /**
      * Get the attributes that should be cast.
@@ -32,8 +32,23 @@ class User extends Authenticatable
         ];
     }
 
-    public function profile()
+    public function alumni()
     {
-        return $this->hasOne(AlumniProfile::class, 'user_id', 'id_users');
+        return $this->hasOne(Alumni::class, 'id_user', 'id_user');
+    }
+
+    public function lowongan()
+    {
+        return $this->hasMany(Lowongan::class, 'id_user', 'id_user');
+    }
+
+    public function infoKampus()
+    {
+        return $this->hasMany(CampusInfo::class, 'id_user', 'id_user');
+    }
+
+    public function tandaTangan()
+    {
+        return $this->hasOne(TandaTanganAdmin::class, 'id_user', 'id_user');
     }
 }
