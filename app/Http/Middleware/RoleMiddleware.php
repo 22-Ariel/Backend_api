@@ -13,10 +13,10 @@ class RoleMiddleware
      *
      * @param  Closure(Request): (Response)  $next
      */
-    public function handle(Request $request, Closure $next, $role): Response
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        if (! $request->user() || $request->user()->role !== $role) {
-            return response()->json(['message' => 'Unauthorized. Akses ditolak untuk role ini.'], 403);
+        if (! $request->user() || !in_array($request->user()->role, $roles)) {
+            return response()->json(['message' => 'Unauthorized. Akses ditolak.'], 403);
         }
 
         return $next($request);
