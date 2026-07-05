@@ -9,12 +9,16 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\InfoController;
 use App\Http\Controllers\WebSettingController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MasterDataController;
+use App\Http\Controllers\TracerStudyController;
+use App\Http\Controllers\SuratIjazahController;
+use App\Http\Controllers\TandaTanganController;
 
 // === PUBLIC ROUTES ===
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
-Route::post('/auth/forgot-password', [AuthController::class, 'forgotPassword']);
 
+// Info Publik (Lowongan, Berita, Info, Web Settings)
 Route::get('/jobs', [JobController::class, 'index']);
 Route::get('/jobs/{id}', [JobController::class, 'show']);
 Route::get('/news', [NewsController::class, 'index']);
@@ -25,44 +29,65 @@ Route::get('/web-settings', [WebSettingController::class, 'index']);
 // === PROTECTED ROUTES ===
 Route::middleware('auth:sanctum')->group(function () {
     
-    // Auth Logout
+    // Global Auth Route
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
-    // === ALUMNI ROUTES ===
-    Route::middleware('role:alumni')->group(function () {
-        Route::get('/alumni/profile', [AlumniController::class, 'profile']);
-        Route::put('/alumni/profile', [AlumniController::class, 'updateProfile']);
-        Route::post('/alumni/avatar', [AlumniController::class, 'uploadAvatar']);
+    // ================== ALUMNI ROUTES ==================
+    Route::middleware('role:alumni')->prefix('alumni')->group(function () {
+        // Mengelola Profil Dasar
+        Route::get('/profile', [AlumniController::class, 'profile']);
+        Route::put('/profile', [AlumniController::class, 'updateProfile']);
+        
+        // Mengisi Tracer Study
+        Route::post('/tracer-study', [TracerStudyController::class, 'store']);
+        
+        // Mengunduh Surat Pengantar Ijazah
+        Route::post('/surat-ijazah/generate', [SuratIjazahController::class, 'generate']);
+        Route::get('/surat-ijazah', [SuratIjazahController::class, 'getMine']);
     });
 
-    // === ADMIN ROUTES ===
+    // ================== ADMIN ROUTES ==================
     Route::middleware('role:admin')->prefix('admin')->group(function () {
-        Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
-
-        // Alumni Management
+        // Master Data & Akun
+        Route::get('/fakultas', [MasterDataController::class, 'getFakultas']);
+        Route::post('/fakultas', [MasterDataController::class, 'storeFakultas']);
+        Route::delete('/fakultas/{id}', [MasterDataController::class, 'destroyFakultas']);
+        Route::get('/prodi', [MasterDataController::class, 'getProdi']);
+        Route::post('/prodi', [MasterDataController::class, 'storeProdi']);
+        Route::delete('/prodi/{id}', [MasterDataController::class, 'destroyProdi']);
         Route::get('/alumni', [AlumniController::class, 'index']);
-        Route::get('/alumni/{id}', [AlumniController::class, 'show']);
-        Route::put('/alumni/{id}', [AlumniController::class, 'update']);
-        Route::delete('/alumni/{id}', [AlumniController::class, 'destroy']);
-
-        // Job Management
+        
+        // Mengelola Lowongan Pekerjaan
         Route::post('/jobs', [JobController::class, 'store']);
         Route::put('/jobs/{id}', [JobController::class, 'update']);
         Route::delete('/jobs/{id}', [JobController::class, 'destroy']);
 
-        // News Management
-        Route::get('/news', [NewsController::class, 'indexAdmin']);
-        Route::post('/news', [NewsController::class, 'store']);
-        Route::put('/news/{id}', [NewsController::class, 'update']);
-        Route::delete('/news/{id}', [NewsController::class, 'destroy']);
-
-        // Info Management
-        Route::get('/info', [InfoController::class, 'indexAdmin']);
+        // Mengelola Info Kampus & Berita
         Route::post('/info', [InfoController::class, 'store']);
         Route::put('/info/{id}', [InfoController::class, 'update']);
         Route::delete('/info/{id}', [InfoController::class, 'destroy']);
-
-        // Web Settings
+        Route::post('/news', [NewsController::class, 'store']);
+        Route::put('/news/{id}', [NewsController::class, 'update']);
+        Route::delete('/news/{id}', [NewsController::class, 'destroy']);
         Route::put('/web-settings', [WebSettingController::class, 'update']);
+
+        // Mengelola Tanda Tangan Digital
+        Route::post('/ttd', [TandaTanganController::class, 'upload']);
+        Route::get('/ttd', [TandaTanganController::class, 'getMine']);
+    });
+
+    // ================== PIMPINAN ROUTES ==================
+    Route::middleware('role:pimpinan,admin')->prefix('pimpinan')->group(function () {
+        // Memantau Dasbor Statistik
+        Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
+        
+        // Mengunduh Laporan Tracer Study
+        Route::get('/tracer-study', [TracerStudyController::class, 'index']);
+    });
+
+    // ================== DOSEN ROUTES ==================
+    Route::middleware('role:dosen,admin,pimpinan')->prefix('dosen')->group(function () {
+        // Memantau Data Lulusan
+        Route::get('/alumni', [AlumniController::class, 'index']);
     });
 });
