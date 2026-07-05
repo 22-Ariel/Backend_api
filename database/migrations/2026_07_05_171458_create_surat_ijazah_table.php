@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('info_kampus', function (Blueprint $table) {
-            $table->id('id_info');
-            $table->foreignId('id_user')->constrained('users', 'id_user')->onDelete('cascade');
-            $table->string('judul');
-            $table->text('konten');
-            $table->string('gambar')->nullable();
+        Schema::create('surat_ijazah', function (Blueprint $table) {
+            $table->id('id_ijazah');
+            $table->foreignId('id_alumni')->constrained('alumni', 'id_alumni')->onDelete('cascade');
+            $table->string('file_path')->nullable();
+            $table->timestamp('generated_at')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('campus_info');
+        Schema::dropIfExists('surat_ijazah');
     }
 };

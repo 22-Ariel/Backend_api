@@ -11,17 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jobs', function (Blueprint $table) {
-            $table->id('id_jobs');
-            $table->string('posisi');
-            $table->string('perusahaan');
-            $table->enum('tipe_pekerjaan', ['Penuh Waktu', 'Paruh Waktu', 'Magang', 'Kontrak']);
-            $table->string('lokasi');
-            $table->string('gaji')->nullable();
-            $table->text('deskripsi');
-            $table->text('persyaratan');
-            $table->date('batas_waktu');
-            $table->enum('status', ['Aktif', 'Tutup'])->default('Aktif');
+        Schema::create('lowongan', function (Blueprint $table) {
+            $table->id('id_lowongan');
+            $table->foreignId('id_user')->constrained('users', 'id_user')->onDelete('cascade');
+            $table->string('title');
+            $table->string('company');
+            $table->string('location');
+            $table->text('description');
+            $table->string('url')->nullable();
+            $table->date('deadline')->nullable();
             $table->timestamps();
         });
 
