@@ -34,7 +34,7 @@ class TracerStudyController extends Controller
         return response()->json(['message' => 'Berhasil disimpan', 'data' => $tracer]);
     }
 
-    // PIMPINAN / ADMIN / DOSEN: View Reports
+    // ADMIN: View Reports
     public function index()
     {
         $data = TracerStudy::with('alumni.prodi')->get();

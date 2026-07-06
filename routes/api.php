@@ -75,19 +75,4 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/ttd', [TandaTanganController::class, 'upload']);
         Route::get('/ttd', [TandaTanganController::class, 'getMine']);
     });
-
-    // ================== PIMPINAN ROUTES ==================
-    Route::middleware('role:pimpinan,admin')->prefix('pimpinan')->group(function () {
-        // Memantau Dasbor Statistik
-        Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
-        
-        // Mengunduh Laporan Tracer Study
-        Route::get('/tracer-study', [TracerStudyController::class, 'index']);
-    });
-
-    // ================== DOSEN ROUTES ==================
-    Route::middleware('role:dosen,admin,pimpinan')->prefix('dosen')->group(function () {
-        // Memantau Data Lulusan
-        Route::get('/alumni', [AlumniController::class, 'index']);
-    });
 });

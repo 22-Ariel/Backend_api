@@ -23,15 +23,7 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin'
         ]);
 
-        // 2. Buat Akun Pimpinan (opsional untuk tes)
-        User::create([
-            'username' => 'pimpinan_rektor',
-            'email' => 'pimpinan@unuha.ac.id',
-            'password' => Hash::make('pimpinan123'),
-            'role' => 'pimpinan'
-        ]);
-
-        // 3. Buat Data Fakultas & Prodi Default
+        // 2. Buat Data Fakultas & Prodi Default
         $fakultas = Fakultas::create([
             'nama_fakultas' => 'Fakultas Ilmu Komputer'
         ]);
