@@ -15,27 +15,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Buat Akun Admin
-        User::create([
-            'username' => 'admin_super',
-            'email' => 'admin@unuha.ac.id',
-            'password' => Hash::make('admin123'),
-            'role' => 'admin'
-        ]);
-
-        // 2. Buat Data Fakultas & Prodi Default
-        $fakultas = Fakultas::create([
-            'nama_fakultas' => 'Fakultas Ilmu Komputer'
-        ]);
-
-        Prodi::create([
-            'id_fakultas' => $fakultas->id_fakultas,
-            'nama_prodi' => 'Teknik Informatika'
-        ]);
-        
-        Prodi::create([
-            'id_fakultas' => $fakultas->id_fakultas,
-            'nama_prodi' => 'Sistem Informasi'
+        $this->call([
+            AdminSeeder::class,
+            FakultasSeeder::class,
+            ProdiSeeder::class,
         ]);
     }
 }
