@@ -13,7 +13,7 @@ class Lowongan extends Model
     protected $primaryKey = 'id_lowongan';
     protected $fillable = [
         'id_user', 'title', 'company', 'location', 
-        'description', 'url', 'deadline'
+        'description', 'url', 'deadline', 'type', 'experience'
     ];
 
     public function admin()

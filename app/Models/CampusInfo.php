@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class CampusInfo extends Model
 {
-    protected $table = 'campus_info';
-    protected $primaryKey = 'id_campus_info';
+    protected $table = 'info_kampus';
+    protected $primaryKey = 'id_info';
 
     protected $fillable = [
+        'id_user',
         'judul',
         'tipe',
         'konten',

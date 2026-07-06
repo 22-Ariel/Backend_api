@@ -14,7 +14,7 @@ class InfoController extends Controller
 
     public function show($id)
     {
-        $info = CampusInfo::where('id_campus_info', $id)->where('status', 'Aktif')->first();
+        $info = CampusInfo::where('id_info', $id)->where('status', 'Aktif')->first();
         if (!$info) return response()->json(['message' => 'Not found'], 404);
         return response()->json($info);
     }
@@ -35,7 +35,10 @@ class InfoController extends Controller
             'status' => 'required|in:Aktif,Tidak Aktif'
         ]);
 
-        $info = CampusInfo::create($request->all());
+        $data = $request->all();
+        $data['id_user'] = $request->user()->id_user ?? 1;
+
+        $info = CampusInfo::create($data);
         return response()->json(['message' => 'Berhasil dibuat', 'data' => $info], 201);
     }
 

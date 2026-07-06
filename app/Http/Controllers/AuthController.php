@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Alumni;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -38,6 +39,13 @@ class AuthController extends Controller
             'angkatan' => $request->angkatan,
             'nomor_telepon' => $request->nomor_telepon ?? null,
             'alamat' => $request->alamat ?? null,
+        ]);
+
+        Notification::create([
+            'id_user' => $user->id_user,
+            'title' => 'Selamat Datang di Portal Alumni!',
+            'message' => 'Terima kasih telah mendaftar. Silakan lengkapi profil Anda untuk mendapatkan rekomendasi lowongan pekerjaan yang sesuai.',
+            'type' => 'info'
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -84,6 +92,30 @@ class AuthController extends Controller
     {
         return response()->json([
             'message' => 'Fitur forgot password belum diimplementasi (membutuhkan mailer)'
+        ]);
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = $request->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json([
+                'message' => 'Kata sandi saat ini tidak valid.'
+            ], 400);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        return response()->json([
+            'message' => 'Kata sandi berhasil diperbarui.'
         ]);
     }
 }

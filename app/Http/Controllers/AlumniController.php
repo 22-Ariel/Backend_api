@@ -13,7 +13,7 @@ class AlumniController extends Controller
 
     public function profile(Request $request)
     {
-        $profile = Alumni::with('prodi.fakultas')->where('id_user', $request->user()->id_user)->first();
+        $profile = Alumni::with(['prodi.fakultas', 'tracerStudy'])->where('id_user', $request->user()->id_user)->first();
         return response()->json($profile);
     }
 

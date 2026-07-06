@@ -13,6 +13,7 @@ use App\Http\Controllers\MasterDataController;
 use App\Http\Controllers\TracerStudyController;
 use App\Http\Controllers\SuratIjazahController;
 use App\Http\Controllers\TandaTanganController;
+use App\Http\Controllers\NotificationController;
 
 // === PUBLIC ROUTES ===
 Route::post('/auth/register', [AuthController::class, 'register']);
@@ -24,13 +25,21 @@ Route::get('/jobs/{id}', [JobController::class, 'show']);
 Route::get('/news', [NewsController::class, 'index']);
 Route::get('/news/{id}', [NewsController::class, 'show']);
 Route::get('/info', [InfoController::class, 'index']);
+Route::get('/info/{id}', [InfoController::class, 'show']);
 Route::get('/web-settings', [WebSettingController::class, 'index']);
+Route::get('/stats', [DashboardController::class, 'stats']);
 
 // === PROTECTED ROUTES ===
 Route::middleware('auth:sanctum')->group(function () {
     
     // Global Auth Route
     Route::post('/auth/logout', [AuthController::class, 'logout']);
+    Route::put('/auth/password', [AuthController::class, 'updatePassword']);
+
+    // Notifications (Global for authenticated users)
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::put('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
+    Route::put('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
 
     // ================== ALUMNI ROUTES ==================
     Route::middleware('role:alumni')->prefix('alumni')->group(function () {
@@ -42,7 +51,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/tracer-study', [TracerStudyController::class, 'store']);
         
         // Mengunduh Surat Pengantar Ijazah
-        Route::post('/surat-ijazah/generate', [SuratIjazahController::class, 'generate']);
+        Route::post('/surat-ijazah/upload', [SuratIjazahController::class, 'upload']);
         Route::get('/surat-ijazah', [SuratIjazahController::class, 'getMine']);
     });
 
@@ -74,5 +83,10 @@ Route::middleware('auth:sanctum')->group(function () {
         // Mengelola Tanda Tangan Digital
         Route::post('/ttd', [TandaTanganController::class, 'upload']);
         Route::get('/ttd', [TandaTanganController::class, 'getMine']);
+
+        // Verifikasi Surat Ijazah
+        Route::get('/surat-ijazah', [SuratIjazahController::class, 'adminIndex']);
+        Route::put('/surat-ijazah/{id}/verify', [SuratIjazahController::class, 'adminVerify']);
+        Route::delete('/surat-ijazah/{id}', [SuratIjazahController::class, 'destroy']);
     });
 });

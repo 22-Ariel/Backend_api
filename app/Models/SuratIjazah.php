@@ -12,7 +12,7 @@ class SuratIjazah extends Model
     protected $table = 'surat_ijazah';
     protected $primaryKey = 'id_ijazah';
     protected $fillable = [
-        'id_alumni', 'file_path', 'generated_at'
+        'id_alumni', 'file_path', 'status', 'catatan_admin', 'generated_at'
     ];
 
     protected $casts = [

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TracerStudy;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 
 class TracerStudyController extends Controller
@@ -30,6 +31,13 @@ class TracerStudyController extends Controller
                 'filled_at' => now()
             ]
         );
+
+        Notification::create([
+            'id_user' => $request->user()->id_user,
+            'title' => 'Pendataan Berhasil',
+            'message' => 'Terima kasih, data karir Anda telah berhasil disimpan ke dalam sistem Portal Alumni. Anda sekarang dapat mengunduh laporannya di Dasbor.',
+            'type' => 'success'
+        ]);
 
         return response()->json(['message' => 'Berhasil disimpan', 'data' => $tracer]);
     }

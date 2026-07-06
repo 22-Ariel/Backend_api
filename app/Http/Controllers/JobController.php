@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lowongan;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 
 class JobController extends Controller
@@ -39,6 +40,14 @@ class JobController extends Controller
         $data['id_user'] = $request->user()->id_user; // Assign current admin
 
         $lowongan = Lowongan::create($data);
+
+        Notification::create([
+            'id_user' => null, // Global notification
+            'title' => 'Lowongan Baru Sesuai Profilmu',
+            'message' => $request->company . ' sedang mencari ' . $request->title . '. ' . ($request->deadline ? 'Batas waktu pendaftaran adalah ' . $request->deadline . '. ' : '') . 'Segera lamar!',
+            'type' => 'info'
+        ]);
+
         return response()->json(['message' => 'Berhasil dibuat', 'data' => $lowongan], 201);
     }
 
