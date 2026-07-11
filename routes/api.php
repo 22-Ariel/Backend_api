@@ -18,6 +18,19 @@ use App\Http\Controllers\NotificationController;
 // === PUBLIC ROUTES ===
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
+// Info Publik (Lowongan, Berita, Info, Web Settings)
+Route::get('/jobs', [JobController::class, 'index']);
+Route::get('/jobs/{id}', [JobController::class, 'show']);
+Route::get('/news', [NewsController::class, 'index']);
+Route::get('/news/{id}', [NewsController::class, 'show']);
+Route::get('/info', [InfoController::class, 'index']);
+Route::get('/info/{id}', [InfoController::class, 'show']);
+Route::get('/web-settings', [WebSettingController::class, 'index']);
+Route::get('/stats', [DashboardController::class, 'stats']);
+
+// Master Data Publik (untuk form daftar/register)
+Route::get('/fakultas', [MasterDataController::class, 'getFakultas']);
+Route::get('/prodi', [MasterDataController::class, 'getProdi']);
 
 // Info Publik (Lowongan, Berita, Info, Web Settings)
 Route::get('/jobs', [JobController::class, 'index']);
@@ -28,6 +41,8 @@ Route::get('/info', [InfoController::class, 'index']);
 Route::get('/info/{id}', [InfoController::class, 'show']);
 Route::get('/web-settings', [WebSettingController::class, 'index']);
 Route::get('/stats', [DashboardController::class, 'stats']);
+Route::get('/fakultas', [MasterDataController::class, 'getFakultas']);
+Route::get('/prodi', [MasterDataController::class, 'getProdi']);
 
 // === PROTECTED ROUTES ===
 Route::middleware('auth:sanctum')->group(function () {
