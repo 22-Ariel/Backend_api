@@ -80,6 +80,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/prodi', [MasterDataController::class, 'storeProdi']);
         Route::delete('/prodi/{id}', [MasterDataController::class, 'destroyProdi']);
         Route::get('/alumni', [AlumniController::class, 'index']);
+        Route::put('/alumni/{id}', [AlumniController::class, 'update']);
+        Route::delete('/alumni/{id}', [AlumniController::class, 'destroy']);
         
         // Mengelola Lowongan Pekerjaan
         Route::post('/jobs', [JobController::class, 'store']);
@@ -87,9 +89,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/jobs/{id}', [JobController::class, 'destroy']);
 
         // Mengelola Info Kampus & Berita
+        Route::get('/info', [InfoController::class, 'indexAdmin']);
         Route::post('/info', [InfoController::class, 'store']);
         Route::put('/info/{id}', [InfoController::class, 'update']);
         Route::delete('/info/{id}', [InfoController::class, 'destroy']);
+        Route::get('/news', [NewsController::class, 'indexAdmin']);
         Route::post('/news', [NewsController::class, 'store']);
         Route::put('/news/{id}', [NewsController::class, 'update']);
         Route::delete('/news/{id}', [NewsController::class, 'destroy']);
